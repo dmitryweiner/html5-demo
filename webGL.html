@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test canvas</title>
+    <script type="application/javascript">
+        const DIV_SIZE = 200;
+        const ITERATIONS = 100000;
+
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const initialTime = new Date();
+            /**
+             * Creates a program, attaches shaders, links the program.
+             * @param {WebGLShader[]} shaders. The shaders to attach.
+             */
+            const createGLProgram = function( gl, shaders ) {
+                const program = gl.createProgram();
+                for ( let i = 0; i < shaders.length; i += 1 ) {
+                    gl.attachShader( program, shaders[ i ] );
+                }
+
+                gl.linkProgram( program );
+
+                // Check the link status
+                const linked = gl.getProgramParameter( program, gl.LINK_STATUS );
+                if ( !linked ) {
+
+                    // Something went wrong with the link
+                    const lastError = gl.getProgramInfoLog( program );
+                    window.console.error( "Error in program linking: " + lastError );
+
+                    gl.deleteProgram( program );
+                    return null;
+                }
+                return program;
+            };
+
+            const myCreateShader = function( gl, shaderScriptText, shaderType ) {
+
+                // Create the shader object
+                const shader = gl.createShader( shaderType );
+
+                // Load the shader source
+                gl.shaderSource( shader, shaderScriptText );
+
+                // Compile the shader
+                gl.compileShader( shader );
+                return shader;
+            };
+
+            // Get A WebGL context.
+            const canvas = document.getElementById( "webGL" );
+
+            const gl = canvas.getContext( "webgl", { antialias: false/*, preserveDrawingBuffer: true*/ } );
+
+            const vertexShader = myCreateShader( gl,
+                `attribute vec2 a_position;
+
+	uniform vec2 u_resolution;
+
+	void main() {
+  	// convert the rectangle from pixels to 0.0 to 1.0
+		vec2 zeroToOne = a_position / u_resolution;
+
+		// convert from 0 -> 1 to 0 -> 2
+		vec2 zeroToTwo = zeroToOne * 2.0;
+
+		// convert from 0 -> 2 to -1 -> +1 (clipspace)
+		vec2 clipSpace = zeroToTwo - 1.0;
+
+		// Flip 0,0 from bottom left to conventional 2D top left.
+    gl_PointSize = 1.0;
+		gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+	}`, gl.VERTEX_SHADER );
+
+            const fragmentShader = myCreateShader( gl,
+                `precision mediump float;
+
+	uniform vec4 u_color;
+
+	void main() {
+  	gl_FragColor = u_color;
+	}`, gl.FRAGMENT_SHADER );
+
+            const program = createGLProgram( gl, [ vertexShader, fragmentShader ] );
+            gl.useProgram( program );
+
+            // Store color location.
+            const colorLocation = gl.getUniformLocation( program, "u_color" );
+
+            // Look up where the vertex data needs to go.
+            const positionLocation = gl.getAttribLocation( program, "a_position" );
+
+            // Set the resolution.
+            const resolutionLocation = gl.getUniformLocation( program, "u_resolution");
+            gl.uniform2f( resolutionLocation, canvas.width, canvas.height);
+
+            // Create a buffer.
+            const buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // Returns a random integer from 0 to range - 1.
+            function randomInt(range) {
+                return Math.floor(Math.random() * range);
+            }
+
+            // Fill the buffer with the values that define a rectangle.
+            function setRectangleVertices(gl, x, y, width, height) {
+                const x1 = x;
+                const x2 = x + width;
+                const y1 = y;
+                const y2 = y + height;
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                    x1, y1,
+                    x2, y1,
+                    x1, y2,
+                    x1, y2,
+                    x2, y1,
+                    x2, y2]), gl.STATIC_DRAW);
+            }
+
+            function drawARandomRectangle(gl) {
+                // Setup a random rectangle
+                const x = randomInt(DIV_SIZE);
+                const y = randomInt(DIV_SIZE);
+                const w = randomInt(DIV_SIZE - x);
+                const h = randomInt(DIV_SIZE - y);
+                setRectangleVertices(gl, x, y, w, h);
+
+                // Set a random color.
+                gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+
+                // Draw the rectangle.
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
+
+            setTimeout(() => {
+                const example = document.getElementById("example");
+                const context = example.getContext("2d");
+
+                for (let i = 0; i < ITERATIONS; i++) {
+                    context.fillStyle = getRandomColor();
+                    context.fillRect(Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE);
+                }
+                console.log("Canvas: ", new Date - initialTime);
+            }, 0);
+
+            setTimeout(() => {
+                for (let i = 0; i < ITERATIONS; i++) {
+                    drawARandomRectangle(gl);
+                }
+                console.log("WebGL: ", new Date - initialTime);
+            }, 0);
+        });
+    </script>
+    <style type="text/css">
+        #holder {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #holder > * {
+            margin: 10px;
+            border: 1px solid black;
+            position: relative;
+        }
+
+    </style>
+</head>
+<body>
+<div id="holder">
+    <canvas id="example" width="200" height="200">
+        This text is displayed if your browser does not support HTML5 Canvas.
+    </canvas>
+    <canvas id="webGL" width="200" height="200">
+        This text is displayed if your browser does not support HTML5 Canvas.
+    </canvas>
+</div>
+</body>
+</html>

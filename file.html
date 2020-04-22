@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File</title>
+    <style type="text/css">
+        #dropZone {
+            border: 5px solid blue;
+            width:  400px;
+            height: 200px;
+        }
+    </style>
+    <script type="application/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+
+            function handleSimpleFileInput(event) {
+                logs.innerHTML = "";
+                picturesHolder.innerHTML = "";
+                for (let file of simpleInput.files) {
+                    console.log(file);
+                    logs.innerHTML += `File name: ${file.name}, file size: ${file.size}.\n`;
+                    createPictureFromFile(file)
+                }
+            }
+
+            function dropHandler(ev) {
+                console.log('File(s) dropped');
+
+                // Prevent default behavior (Prevent file from being opened)
+                ev.preventDefault();
+
+                if (ev.dataTransfer.items) {
+                    // Use DataTransferItemList interface to access the file(s)
+                    for (let file of ev.dataTransfer.items) {
+                        // If dropped items aren't files, reject them
+                        if (file.kind === 'file') {
+                            const convertedFile = file.getAsFile();
+                            console.log(file, convertedFile);
+                            createPictureFromFile(convertedFile);
+                        }
+                    }
+                } else {
+                    // Use DataTransfer interface to access the file(s)
+                    for (let file of ev.dataTransfer.files) {
+                        console.log(file);
+                        createPictureFromFile(file);
+                    }
+                }
+            }
+
+            function createPictureFromFile(file) {
+                const image = document.createElement('img');
+                image.src = URL.createObjectURL(file);
+                picturesHolder.appendChild(image);
+            }
+
+            function preventDefaults (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            const simpleInput = document.getElementById("simpleInput");
+            const logs = document.getElementById("logs");
+            const picturesHolder = document.getElementById("picturesHolder");
+            const dropZone = document.getElementById("dropZone");
+            simpleInput.addEventListener("change", handleSimpleFileInput);
+            dropZone.addEventListener("drop", dropHandler, false);
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+        });
+    </script>
+</head>
+<body>
+    <input id="simpleInput" type="file" multiple accept=".jpg, .jpeg, .png"/>
+    <br/>
+    <br/>
+    <div id="dropZone">
+        <p>Drag one or more files to this Drop Zone ...</p>
+    </div>
+    <br/>
+    <br/>
+    <textarea id="logs" rows="4" cols="80"></textarea>
+    <br/>
+    <br/>
+    <div id="picturesHolder">
+
+    </div>
+</body>
+</html>

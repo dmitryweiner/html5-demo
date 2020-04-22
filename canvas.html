@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test canvas</title>
+    <script type="application/javascript">
+        const DIV_SIZE = 200;
+        const ITERATIONS = 100000;
+
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const initialTime = new Date();
+
+            setTimeout(() => {
+                const example = document.getElementById("example");
+                const context = example.getContext("2d");
+
+                for (let i = 0; i < ITERATIONS; i++) {
+                    context.fillStyle = getRandomColor();
+                    context.fillRect(Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE);
+                }
+                console.log("Canvas: ", new Date - initialTime);
+            }, 0);
+
+            setTimeout(() => {
+                const testDiv = document.getElementById("testDiv");
+
+                for (let i = 0; i < ITERATIONS; i++) {
+                    const newDiv = document.createElement("div");
+                    const top = Math.random() * DIV_SIZE;
+                    const left = Math.random() * DIV_SIZE;
+                    const width = Math.random() * (DIV_SIZE - left);
+                    const height = Math.random() * (DIV_SIZE - top);
+                    newDiv.style.backgroundColor = getRandomColor();
+                    newDiv.style.position = "absolute";
+
+                    newDiv.style.top = top + "px";
+                    newDiv.style.left = left + "px";
+                    newDiv.style.width = width + "px";
+                    newDiv.style.height = height + "px";
+                    testDiv.appendChild(newDiv);
+
+                }
+                console.log("Div: ", new Date - initialTime);
+            }, 0);
+        });
+
+    </script>
+    <style type="text/css">
+        #example {
+        }
+
+        #holder {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #holder>* {
+            margin: 10px;
+            border: 1px solid black;
+            width: 200px;
+            height: 200px;
+            position: relative;
+        }
+
+    </style>
+</head>
+<body>
+<div id="holder">
+    <canvas id="example" width="200" height="200">
+        This text is displayed if your browser does not support HTML5 Canvas.
+    </canvas>
+    <div id="testDiv">
+
+    </div>
+</div>
+</body>
+</html>
