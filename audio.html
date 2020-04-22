@@ -7,9 +7,14 @@
 <script type="application/javascript">
     document.addEventListener("DOMContentLoaded", () => {
         const audio = new Audio("files/win.mp3");
-        const button = document.getElementById("button");
-        button.addEventListener("click", () => {
+        const buttonPlay = document.getElementById("buttonPlay");
+        const buttonStop = document.getElementById("buttonStop");
+        buttonPlay.addEventListener("click", () => {
             audio.play();
+        });
+        buttonStop.addEventListener("click", () => {
+            audio.pause();
+            audio.currentTime = 0;
         });
     });
 </script>
@@ -22,6 +27,7 @@
 <br/>
 <br/>
 
-<button id="button">Play!</button>
+<button id="buttonPlay">Play</button>
+<button id="buttonStop">Stop</button>
 </body>
 </html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Assembly</title>
+    <script type="application/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            const ITERATIONS = 1000000;
+            const MAX_NUMBER = 16;
+            let factorial = () => {};
+            let factorialNumber = 0;
+
+            fetch('files/main.wasm').then(response => {
+                return response.arrayBuffer();
+            }).then(bytes => {
+                console.log("Wasm file bytes: ", bytes);
+                return WebAssembly.instantiate(bytes);
+            }).then(results => {
+                console.log(results.instance);
+                factorial = results.instance.exports.factorial;
+            }).catch(console.error);
+
+            function nativeFactorial(n) {
+                let result = 1;
+                for (let i = 1; i <= n; i++) {
+                    result *= i;
+                }
+                return result;
+            }
+
+            const inputNumber = document.getElementById("inputNumber");
+            const outputNumber = document.getElementById("outputNumber");
+            const buttonCalc = document.getElementById("buttonCalc");
+            const buttonTest = document.getElementById("buttonTest");
+
+            buttonCalc.addEventListener("click", () => {
+                outputNumber.value = factorial(Number(inputNumber.value));
+            });
+
+            buttonTest.addEventListener("click", () => {
+                console.log(`Calculating factorial ${ITERATIONS} times for random numbers from 1 to ${MAX_NUMBER}`);
+                const initialTime = new Date();
+                setTimeout(() => {
+                    for(let i = 0; i < ITERATIONS; i++) {
+                        factorialNumber = nativeFactorial(Math.ceil(Math.random() * MAX_NUMBER));
+                    }
+                    console.log("Native factorial:", new Date() - initialTime);
+                }, 0);
+
+                setTimeout(() => {
+                    for(let i = 0; i < ITERATIONS; i++) {
+                        factorialNumber = factorial(Math.ceil(Math.random() * MAX_NUMBER));
+                    }
+                    console.log("Wasm factorial:", new Date() - initialTime);
+                }, 0);
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <input id="inputNumber" type="number"/>
+    <button id="buttonCalc">Get factorial</button>
+    <br/>
+    <input id="outputNumber" type="number" disabled/>
+    <br/>
+    <br/>
+    <button id="buttonTest">Run test</button>
+</body>
+</html>
