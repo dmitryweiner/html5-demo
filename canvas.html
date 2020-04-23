@@ -7,7 +7,6 @@
         const DIV_SIZE = 200;
         const ITERATIONS = 100000;
 
-
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
             let color = '#';
@@ -18,40 +17,50 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const initialTime = new Date();
+            const buttonUseDiv = document.getElementById("buttonUseDiv");
+            const buttonUseCanvas = document.getElementById("buttonUseCanvas");
+            const result = document.getElementById("result");
 
-            setTimeout(() => {
-                const example = document.getElementById("example");
-                const context = example.getContext("2d");
+            buttonUseDiv.addEventListener("click", () => {
+                const initialTime = new Date();
+                result.innerHTML = "";
+                setTimeout(() => {
+                    const testDiv = document.getElementById("testDiv");
 
-                for (let i = 0; i < ITERATIONS; i++) {
-                    context.fillStyle = getRandomColor();
-                    context.fillRect(Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE);
-                }
-                console.log("Canvas: ", new Date - initialTime);
-            }, 0);
+                    for (let i = 0; i < ITERATIONS; i++) {
+                        const newDiv = document.createElement("div");
+                        const top = Math.random() * DIV_SIZE;
+                        const left = Math.random() * DIV_SIZE;
+                        const width = Math.random() * (DIV_SIZE - left);
+                        const height = Math.random() * (DIV_SIZE - top);
+                        newDiv.style.backgroundColor = getRandomColor();
+                        newDiv.style.position = "absolute";
 
-            setTimeout(() => {
-                const testDiv = document.getElementById("testDiv");
+                        newDiv.style.top = top + "px";
+                        newDiv.style.left = left + "px";
+                        newDiv.style.width = width + "px";
+                        newDiv.style.height = height + "px";
+                        testDiv.appendChild(newDiv);
 
-                for (let i = 0; i < ITERATIONS; i++) {
-                    const newDiv = document.createElement("div");
-                    const top = Math.random() * DIV_SIZE;
-                    const left = Math.random() * DIV_SIZE;
-                    const width = Math.random() * (DIV_SIZE - left);
-                    const height = Math.random() * (DIV_SIZE - top);
-                    newDiv.style.backgroundColor = getRandomColor();
-                    newDiv.style.position = "absolute";
+                    }
+                    result.innerHTML = `Div: ${ITERATIONS} rectangles with ${new Date - initialTime} ms`;
+                }, 0);
+            });
 
-                    newDiv.style.top = top + "px";
-                    newDiv.style.left = left + "px";
-                    newDiv.style.width = width + "px";
-                    newDiv.style.height = height + "px";
-                    testDiv.appendChild(newDiv);
+            buttonUseCanvas.addEventListener("click", () => {
+                const initialTime = new Date();
+                result.innerHTML = "";
+                    setTimeout(() => {
+                    const example = document.getElementById("example");
+                    const context = example.getContext("2d");
 
-                }
-                console.log("Div: ", new Date - initialTime);
-            }, 0);
+                    for (let i = 0; i < ITERATIONS; i++) {
+                        context.fillStyle = getRandomColor();
+                        context.fillRect(Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE);
+                    }
+                    result.innerHTML = `Canvas: ${ITERATIONS} rectangles with ${new Date - initialTime} ms`;
+                }, 0);
+            });
         });
 
     </script>
@@ -86,6 +95,10 @@
 
         </div>
     </div>
+    <button id="buttonUseCanvas">Draw rectangles with Canvas</button>
+    <button id="buttonUseDiv">Draw rectangles with DIV</button>
+    <br/>
+    <div id="result"></div>
 </div>
 </body>
 </html>
