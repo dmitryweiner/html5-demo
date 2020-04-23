@@ -20,6 +20,37 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const initialTime = new Date();
+
+            const buttonUseWebGL = document.getElementById("buttonUseWebGL");
+            const buttonUseCanvas = document.getElementById("buttonUseCanvas");
+            const result = document.getElementById("result");
+
+            buttonUseCanvas.addEventListener("click", () => {
+                const initialTime = new Date();
+                result.innerHTML = "";
+                setTimeout(() => {
+                    const example = document.getElementById("example");
+                    const context = example.getContext("2d");
+
+                    for (let i = 0; i < ITERATIONS; i++) {
+                        context.fillStyle = getRandomColor();
+                        context.fillRect(Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE);
+                    }
+                    result.innerHTML = `Canvas: ${ITERATIONS} rectangles with ${new Date - initialTime} ms`;
+                }, 0);
+            });
+
+            buttonUseWebGL.addEventListener("click", () => {
+                const initialTime = new Date();
+                result.innerHTML = "";
+                setTimeout(() => {
+                    for (let i = 0; i < ITERATIONS; i++) {
+                        drawARandomRectangle(gl);
+                    }
+                    result.innerHTML = `WebGL: ${ITERATIONS} rectangles with ${new Date - initialTime} ms`;
+                }, 0);
+            });
+
             /**
              * Creates a program, attaches shaders, links the program.
              * @param {WebGLShader[]} shaders. The shaders to attach.
@@ -146,24 +177,6 @@
                 // Draw the rectangle.
                 gl.drawArrays(gl.TRIANGLES, 0, 6);
             }
-
-            setTimeout(() => {
-                const example = document.getElementById("example");
-                const context = example.getContext("2d");
-
-                for (let i = 0; i < ITERATIONS; i++) {
-                    context.fillStyle = getRandomColor();
-                    context.fillRect(Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE, Math.random() * DIV_SIZE);
-                }
-                console.log("Canvas: ", new Date - initialTime);
-            }, 0);
-
-            setTimeout(() => {
-                for (let i = 0; i < ITERATIONS; i++) {
-                    drawARandomRectangle(gl);
-                }
-                console.log("WebGL: ", new Date - initialTime);
-            }, 0);
         });
     </script>
     <style type="text/css">
@@ -191,6 +204,10 @@
             This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
     </div>
+    <button id="buttonUseCanvas">Draw rectangles with Canvas</button>
+    <button id="buttonUseWebGL">Draw rectangles with WebGL</button>
+    <br/>
+    <div id="result"></div>
 </div>
 </body>
 </html>
