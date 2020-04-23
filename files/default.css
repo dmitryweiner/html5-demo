@@ -1,0 +1,17 @@
+body {
+    font: 80%  "Lucida Grande", "Lucida Sans", Tahoma, Verdana, sans-serif;
+    color: #000000;
+    text-align:center;
+}
+
+#wrapper {
+    width:980px;
+    text-align:left;
+    margin-left:auto;
+    margin-right:auto;
+    background-color: #FFFFFF;
+}
+
+h1 {
+    font-size: 2.2em;
+}
