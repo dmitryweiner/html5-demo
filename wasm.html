@@ -20,7 +20,7 @@
          */
 
         document.addEventListener("DOMContentLoaded", () => {
-            const ITERATIONS = 1000000;
+            const ITERATIONS = 10000000;
             const MAX_NUMBER = 16;
             let factorial = () => {};
             let factorialNumber = 0;
@@ -77,10 +77,16 @@
 <body>
 <div id="wrapper">
     <h1>Using Web Assembly</h1>
-    <input id="inputNumber" type="number" value="12"/>
-    <button id="buttonCalc">Get factorial</button>
+    <label>
+        Factorial of:
+        <input id="inputNumber" type="number" value="12"/>
+    </label>
+    <button id="buttonCalc">Calculate</button>
     <br/>
-    <input id="outputNumber" type="number" disabled/>
+    <label>
+        Result:
+        <input id="outputNumber" type="number" disabled/>
+    </label>
     <br/>
     <br/>
     <button id="buttonTest">Run test</button>
