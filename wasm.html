@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <title>Web Assembly</title>
     <script type="application/javascript">
+        /*
+            #define WASM_EXPORT __attribute__((visibility("default")))
+
+            WASM_EXPORT
+            int factorial(int n) {
+              int i;
+              int result = 1;
+              for (i = 1; i <= n; i++) {
+                result *= i;
+              }
+              return result;
+            }
+         */
+
         document.addEventListener("DOMContentLoaded", () => {
             const ITERATIONS = 1000000;
             const MAX_NUMBER = 16;
@@ -66,5 +80,8 @@
     <br/>
     <br/>
     <button id="buttonTest">Run test</button>
+    <br/>
+    <br/>
+    <a href="https://webassembly.studio/?f=1wunzf1rmb1">Play with this code in Web IDE</a>
 </body>
 </html>
