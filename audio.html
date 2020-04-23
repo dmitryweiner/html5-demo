@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Audio</title>
+    <link rel="stylesheet" type="text/css" href="files/default.css"/>
 </head>
 <script type="application/javascript">
     document.addEventListener("DOMContentLoaded", () => {
@@ -19,15 +20,18 @@
     });
 </script>
 <body>
-<audio controls>
-    <source src="files/pigeon.mp3" type='audio/mp3' />
-    <p>Your user agent does not support the HTML5 Audio element.</p>
-</audio>
-<br/>
-<br/>
-<br/>
+<div id="wrapper">
+    <h1>Using &lt;audio&gt; tag</h1>
+    <audio controls>
+        <source src="files/pigeon.mp3" type='audio/mp3'/>
+        <p>Your user agent does not support the HTML5 Audio element.</p>
+    </audio>
+    <br/>
+    <br/>
+    <br/>
 
-<button id="buttonPlay">Play</button>
-<button id="buttonStop">Stop</button>
+    <button id="buttonPlay">Play</button>
+    <button id="buttonStop">Stop</button>
+</div>
 </body>
 </html>

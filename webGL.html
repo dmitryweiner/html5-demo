@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Test canvas</title>
+    <link rel="stylesheet" type="text/css" href="files/default.css"/>
     <script type="application/javascript">
         const DIV_SIZE = 200;
         const ITERATIONS = 100000;
@@ -23,47 +24,47 @@
              * Creates a program, attaches shaders, links the program.
              * @param {WebGLShader[]} shaders. The shaders to attach.
              */
-            const createGLProgram = function( gl, shaders ) {
+            const createGLProgram = function (gl, shaders) {
                 const program = gl.createProgram();
-                for ( let i = 0; i < shaders.length; i += 1 ) {
-                    gl.attachShader( program, shaders[ i ] );
+                for (let i = 0; i < shaders.length; i += 1) {
+                    gl.attachShader(program, shaders[i]);
                 }
 
-                gl.linkProgram( program );
+                gl.linkProgram(program);
 
                 // Check the link status
-                const linked = gl.getProgramParameter( program, gl.LINK_STATUS );
-                if ( !linked ) {
+                const linked = gl.getProgramParameter(program, gl.LINK_STATUS);
+                if (!linked) {
 
                     // Something went wrong with the link
-                    const lastError = gl.getProgramInfoLog( program );
-                    window.console.error( "Error in program linking: " + lastError );
+                    const lastError = gl.getProgramInfoLog(program);
+                    window.console.error("Error in program linking: " + lastError);
 
-                    gl.deleteProgram( program );
+                    gl.deleteProgram(program);
                     return null;
                 }
                 return program;
             };
 
-            const myCreateShader = function( gl, shaderScriptText, shaderType ) {
+            const myCreateShader = function (gl, shaderScriptText, shaderType) {
 
                 // Create the shader object
-                const shader = gl.createShader( shaderType );
+                const shader = gl.createShader(shaderType);
 
                 // Load the shader source
-                gl.shaderSource( shader, shaderScriptText );
+                gl.shaderSource(shader, shaderScriptText);
 
                 // Compile the shader
-                gl.compileShader( shader );
+                gl.compileShader(shader);
                 return shader;
             };
 
             // Get A WebGL context.
-            const canvas = document.getElementById( "webGL" );
+            const canvas = document.getElementById("webGL");
 
-            const gl = canvas.getContext( "webgl", { antialias: false/*, preserveDrawingBuffer: true*/ } );
+            const gl = canvas.getContext("webgl", {antialias: false/*, preserveDrawingBuffer: true*/});
 
-            const vertexShader = myCreateShader( gl,
+            const vertexShader = myCreateShader(gl,
                 `attribute vec2 a_position;
 
 	uniform vec2 u_resolution;
@@ -81,29 +82,29 @@
 		// Flip 0,0 from bottom left to conventional 2D top left.
     gl_PointSize = 1.0;
 		gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-	}`, gl.VERTEX_SHADER );
+	}`, gl.VERTEX_SHADER);
 
-            const fragmentShader = myCreateShader( gl,
+            const fragmentShader = myCreateShader(gl,
                 `precision mediump float;
 
 	uniform vec4 u_color;
 
 	void main() {
   	gl_FragColor = u_color;
-	}`, gl.FRAGMENT_SHADER );
+	}`, gl.FRAGMENT_SHADER);
 
-            const program = createGLProgram( gl, [ vertexShader, fragmentShader ] );
-            gl.useProgram( program );
+            const program = createGLProgram(gl, [vertexShader, fragmentShader]);
+            gl.useProgram(program);
 
             // Store color location.
-            const colorLocation = gl.getUniformLocation( program, "u_color" );
+            const colorLocation = gl.getUniformLocation(program, "u_color");
 
             // Look up where the vertex data needs to go.
-            const positionLocation = gl.getAttribLocation( program, "a_position" );
+            const positionLocation = gl.getAttribLocation(program, "a_position");
 
             // Set the resolution.
-            const resolutionLocation = gl.getUniformLocation( program, "u_resolution");
-            gl.uniform2f( resolutionLocation, canvas.width, canvas.height);
+            const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+            gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
             // Create a buffer.
             const buffer = gl.createBuffer();
@@ -180,13 +181,16 @@
     </style>
 </head>
 <body>
-<div id="holder">
-    <canvas id="example" width="200" height="200">
-        This text is displayed if your browser does not support HTML5 Canvas.
-    </canvas>
-    <canvas id="webGL" width="200" height="200">
-        This text is displayed if your browser does not support HTML5 Canvas.
-    </canvas>
+<div id="wrapper">
+    <h1>Using WebGL</h1>
+    <div id="holder">
+        <canvas id="example" width="200" height="200">
+            This text is displayed if your browser does not support HTML5 Canvas.
+        </canvas>
+        <canvas id="webGL" width="200" height="200">
+            This text is displayed if your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
 </div>
 </body>
 </html>

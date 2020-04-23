@@ -6,10 +6,11 @@
     <style type="text/css">
         #dropZone {
             border: 5px solid blue;
-            width:  400px;
+            width: 400px;
             height: 200px;
         }
     </style>
+    <link rel="stylesheet" type="text/css" href="files/default.css"/>
     <script type="application/javascript">
         document.addEventListener("DOMContentLoaded", () => {
 
@@ -54,7 +55,7 @@
                 picturesHolder.appendChild(image);
             }
 
-            function preventDefaults (e) {
+            function preventDefaults(e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
@@ -74,6 +75,8 @@
     </script>
 </head>
 <body>
+<div id="wrapper">
+    <h1>File upload</h1>
     <input id="simpleInput" type="file" multiple accept=".jpg, .jpeg, .png"/>
     <br/>
     <br/>
@@ -88,5 +91,6 @@
     <div id="picturesHolder">
 
     </div>
+</div>
 </body>
 </html>

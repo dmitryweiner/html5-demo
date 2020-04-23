@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Template</title>
+    <script type="application/javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            const button = document.getElementById("button");
+            const result = document.getElementById("result");
+            const status = document.getElementById("status");
+
+            button.addEventListener("click", () => {
+                const initialTime = new Date();
+                result.innerHTML = "";
+                setTimeout(() => {
+                    result.innerHTML = "Done";
+                    status.innerText = `Calculation ended. It took ${new Date() - initialTime} ms.`;
+                }, 0);
+            });
+
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="files/default.css"/>
+    <style type="text/css">
+        #result {
+            width: 800px;
+            overflow-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <h1>Template</h1>
+    <label>
+        Input
+        <input type="number" id="input" value="10">
+    </label>
+    <button id="button">Calculate</button>
+    <div>Status: <span id="status">Idle</span></div>
+    <br/>
+    <div id="result">Result</div>
+</div>
+</body>
+</html>

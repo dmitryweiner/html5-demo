@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Web Assembly</title>
+    <link rel="stylesheet" type="text/css" href="files/default.css"/>
     <script type="application/javascript">
         /*
             #define WASM_EXPORT __attribute__((visibility("default")))
@@ -21,7 +22,8 @@
         document.addEventListener("DOMContentLoaded", () => {
             const ITERATIONS = 1000000;
             const MAX_NUMBER = 16;
-            let factorial = () => {};
+            let factorial = () => {
+            };
             let factorialNumber = 0;
 
             fetch('files/main.wasm').then(response => {
@@ -55,14 +57,14 @@
                 console.log(`Calculating factorial ${ITERATIONS} times for random numbers from 1 to ${MAX_NUMBER}`);
                 const initialTime = new Date();
                 setTimeout(() => {
-                    for(let i = 0; i < ITERATIONS; i++) {
+                    for (let i = 0; i < ITERATIONS; i++) {
                         factorialNumber = nativeFactorial(Math.ceil(Math.random() * MAX_NUMBER));
                     }
                     console.log("Native factorial:", new Date() - initialTime);
                 }, 0);
 
                 setTimeout(() => {
-                    for(let i = 0; i < ITERATIONS; i++) {
+                    for (let i = 0; i < ITERATIONS; i++) {
                         factorialNumber = factorial(Math.ceil(Math.random() * MAX_NUMBER));
                     }
                     console.log("Wasm factorial:", new Date() - initialTime);
@@ -73,6 +75,8 @@
     </script>
 </head>
 <body>
+<div id="wrapper">
+    <h1>Using Web Assembly</h1>
     <input id="inputNumber" type="number"/>
     <button id="buttonCalc">Get factorial</button>
     <br/>
@@ -83,5 +87,6 @@
     <br/>
     <br/>
     <a href="https://webassembly.studio/?f=1wunzf1rmb1">Play with this code in Web IDE</a>
+</div>
 </body>
 </html>

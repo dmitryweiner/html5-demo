@@ -55,6 +55,7 @@
         });
 
     </script>
+    <link rel="stylesheet" type="text/css" href="files/default.css"/>
     <style type="text/css">
         #example {
         }
@@ -64,7 +65,7 @@
             flex-direction: row;
         }
 
-        #holder>* {
+        #holder > * {
             margin: 10px;
             border: 1px solid black;
             width: 200px;
@@ -75,12 +76,15 @@
     </style>
 </head>
 <body>
-<div id="holder">
-    <canvas id="example" width="200" height="200">
-        This text is displayed if your browser does not support HTML5 Canvas.
-    </canvas>
-    <div id="testDiv">
+<div id="wrapper">
+    <h1>Using &lt;canvas&gt; tag and draw graphics in it</h1>
+    <div id="holder">
+        <canvas id="example" width="200" height="200">
+            This text is displayed if your browser does not support HTML5 Canvas.
+        </canvas>
+        <div id="testDiv">
 
+        </div>
     </div>
 </div>
 </body>
