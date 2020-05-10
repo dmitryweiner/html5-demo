@@ -24,6 +24,10 @@
                     } else {
                         if (file.type == 'image/jpeg') {
                             createPictureFromFile(file);
+                        } else {
+                            if (file.type == 'video/mp4') {
+                                createVideoFromFile(file);
+                            }
                         }
                     }
                     logs.innerHTML += `File name: ${file.name}, file size: ${file.size}.\n`;
@@ -64,8 +68,14 @@
             function createAudioFromFile(file) {
                 const audio = document.createElement('audio');
                 audio.src = URL.createObjectURL(file);
-                audio.style.display = 'block'
                 audiosHolder.appendChild(audio);
+            }
+
+
+            function createVideoFromFile(file) {
+                const video = document.createElement('video');
+                video.src = URL.createObjectURL(file);
+                videosHolder.appendChild(video);
             }
 
             function preventDefaults(e) {
@@ -78,6 +88,7 @@
             const picturesHolder = document.getElementById("picturesHolder");
             const dropZone = document.getElementById("dropZone");
             const audiosHolder = document.getElementById("audioHolder");
+            const videosHolder = document.getElementById("videoHolder");
             simpleInput.addEventListener("change", handleSimpleFileInput);
             dropZone.addEventListener("drop", dropHandler, false);
 
@@ -107,6 +118,10 @@
     </div>
     <br/>
     <div id="audioHolder">
+
+    </div>
+    <br/>
+    <div id="videoHolder">
 
     </div>
 </div>
