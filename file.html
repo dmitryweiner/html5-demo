@@ -19,8 +19,14 @@
                 picturesHolder.innerHTML = "";
                 for (let file of simpleInput.files) {
                     console.log(file);
+                    if (file.type == 'audio/mpeg'){
+                        createAudioFromFile(file)
+                    } else {
+                        if (file.type == 'image/jpeg') {
+                            createPictureFromFile(file);
+                        }
+                    }
                     logs.innerHTML += `File name: ${file.name}, file size: ${file.size}.\n`;
-                    createPictureFromFile(file)
                 }
             }
 
@@ -55,6 +61,13 @@
                 picturesHolder.appendChild(image);
             }
 
+            function createAudioFromFile(file) {
+                const audio = document.createElement('audio');
+                audio.src = URL.createObjectURL(file);
+                audio.style.display = 'block'
+                audiosHolder.appendChild(audio);
+            }
+
             function preventDefaults(e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -64,6 +77,7 @@
             const logs = document.getElementById("logs");
             const picturesHolder = document.getElementById("picturesHolder");
             const dropZone = document.getElementById("dropZone");
+            const audiosHolder = document.getElementById("audioHolder");
             simpleInput.addEventListener("change", handleSimpleFileInput);
             dropZone.addEventListener("drop", dropHandler, false);
 
@@ -89,6 +103,10 @@
     <br/>
     <br/>
     <div id="picturesHolder">
+
+    </div>
+    <br/>
+    <div id="audioHolder">
 
     </div>
 </div>
