@@ -43,18 +43,22 @@
                 if (ev.dataTransfer.items) {
                     // Use DataTransferItemList interface to access the file(s)
                     for (let file of ev.dataTransfer.items) {
+                        console.log(file.getAsFile());
                         // If dropped items aren't files, reject them
                         if (file.kind === 'file') {
-                            const convertedFile = file.getAsFile();
-                            console.log(file, convertedFile);
-                            createPictureFromFile(convertedFile);
+                            if (file.type == 'audio/mpeg'){
+                                createAudioFromFile(file.getAsFile())
+                            } else {
+                                if (file.type == 'image/jpeg') {
+                                    createPictureFromFile(file.getAsFile());
+                                } else {
+                                    if (file.type == 'video/mp4') {
+                                        createVideoFromFile(file.getAsFile());
+                                    }   
+                                }       
+                            }
+                            logs.innerHTML += `File name: ${file.name}, file size: ${file.size}.\n`;
                         }
-                    }
-                } else {
-                    // Use DataTransfer interface to access the file(s)
-                    for (let file of ev.dataTransfer.files) {
-                        console.log(file);
-                        createPictureFromFile(file);
                     }
                 }
             }
