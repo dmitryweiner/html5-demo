@@ -67,15 +67,23 @@
 
             function createAudioFromFile(file) {
                 const audio = document.createElement('audio');
-                audio.src = URL.createObjectURL(file);
+                audio.controls = "controls"
+                const source = document.createElement('source')
                 audiosHolder.appendChild(audio);
+                audio.appendChild(source)
+                source.src = URL.createObjectURL(file);
+                audio.load();
             }
 
 
             function createVideoFromFile(file) {
                 const video = document.createElement('video');
-                video.src = URL.createObjectURL(file);
+                video.controls = "controls"
+                const source = document.createElement('source')
                 videosHolder.appendChild(video);
+                video.appendChild(source)
+                source.src = URL.createObjectURL(file);
+                video.load();
             }
 
             function preventDefaults(e) {
