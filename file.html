@@ -19,16 +19,10 @@
                 picturesHolder.innerHTML = "";
                 for (let file of simpleInput.files) {
                     console.log(file);
-                    if (file.type == 'audio/mpeg'){
-                        createAudioFromFile(file)
-                    } else {
-                        if (file.type == 'image/jpeg') {
-                            createPictureFromFile(file);
-                        } else {
-                            if (file.type == 'video/mp4') {
-                                createVideoFromFile(file);
-                            }
-                        }
+                    switch(file.type){
+                        case 'audio/mpeg': createAudioFromFile(file); break;
+                        case 'image/jpeg': createPictureFromFile(file); break;
+                        case 'video/mp4': createVideoFromFile(file); break;
                     }
                     logs.innerHTML += `File name: ${file.name}, file size: ${file.size}.\n`;
                 }
@@ -46,16 +40,10 @@
                         console.log(file.getAsFile());
                         // If dropped items aren't files, reject them
                         if (file.kind === 'file') {
-                            if (file.type == 'audio/mpeg'){
-                                createAudioFromFile(file.getAsFile())
-                            } else {
-                                if (file.type == 'image/jpeg') {
-                                    createPictureFromFile(file.getAsFile());
-                                } else {
-                                    if (file.type == 'video/mp4') {
-                                        createVideoFromFile(file.getAsFile());
-                                    }   
-                                }       
+                            switch(file.type){
+                                case 'audio/mpeg': createAudioFromFile(file.getAsFile()); break;
+                                case 'image/jpeg': createPictureFromFile(file.getAsFile()); break;
+                                case 'video/mp4': createVideoFromFile(file.getAsFile()); break;
                             }
                             logs.innerHTML += `File name: ${file.name}, file size: ${file.size}.\n`;
                         }
