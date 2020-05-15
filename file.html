@@ -18,9 +18,12 @@
                 logs.innerHTML = "";
                 picturesHolder.innerHTML = "";
                 for (let file of simpleInput.files) {
-                    console.log(file);
+                    switch(file.type){
+                        case 'audio/mpeg': createAudioFromFile(file); break;
+                        case 'image/jpeg': createPictureFromFile(file); break;
+                        case 'video/mp4': createVideoFromFile(file); break;
+                    }
                     logs.innerHTML += `File name: ${file.name}, file size: ${file.size}.\n`;
-                    createPictureFromFile(file)
                 }
             }
 
@@ -34,26 +37,42 @@
                     // Use DataTransferItemList interface to access the file(s)
                     for (let file of ev.dataTransfer.items) {
                         // If dropped items aren't files, reject them
-                        if (file.kind === 'file') {
-                            const convertedFile = file.getAsFile();
-                            console.log(file, convertedFile);
-                            createPictureFromFile(convertedFile);
+                        switch(file.type){
+                            case 'audio/mpeg': createAudioFromFile(file.getAsFile()); break;
+                            case 'image/jpeg': createPictureFromFile(file.getAsFile()); break;
+                            case 'video/mp4': createVideoFromFile(file.getAsFile()); break;
                         }
-                    }
-                } else {
-                    // Use DataTransfer interface to access the file(s)
-                    for (let file of ev.dataTransfer.files) {
-                        console.log(file);
-                        createPictureFromFile(file);
                     }
                 }
             }
+        }
 
             function createPictureFromFile(file) {
                 const image = document.createElement('img');
                 image.src = URL.createObjectURL(file);
                 picturesHolder.appendChild(image);
             }
+
+            function createAudioFromFile(file) {
+                const audio = document.createElement('audio');
+                audio.controls = "controls";
+                const source = document.createElement('source');
+                audiosHolder.appendChild(audio);
+                audio.appendChild(source)
+                source.src = URL.createObjectURL(file);
+                audio.load();
+            }
+
+            function createVideoFromFile(file) {
+                const video = document.createElement('video');
+                video.controls = "controls";
+                const source = document.createElement('source');
+                videosHolder.appendChild(video);
+                video.appendChild(source);
+                source.src = URL.createObjectURL(file);
+                video.load();
+            }
+
 
             function preventDefaults(e) {
                 e.preventDefault();
@@ -64,14 +83,16 @@
             const logs = document.getElementById("logs");
             const picturesHolder = document.getElementById("picturesHolder");
             const dropZone = document.getElementById("dropZone");
+            const audiosHolder = document.getElementById("audioHolder");
+            const videosHolder = document.getElementById("videoHolder");
             simpleInput.addEventListener("change", handleSimpleFileInput);
             dropZone.addEventListener("drop", dropHandler, false);
 
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 dropZone.addEventListener(eventName, preventDefaults, false);
                 document.body.addEventListener(eventName, preventDefaults, false);
-            });
-        });
+            })
+        };
     </script>
 </head>
 <body>
@@ -89,8 +110,16 @@
     <br/>
     <br/>
     <div id="picturesHolder">
-
     </div>
+    <br/>
+    <br/>
+    <div class="audioHolder">
+    </div>
+    <br/>
+    <br/>
+    <div class="videoHolder">
+    </div>
+
 </div>
 </body>
 </html>
