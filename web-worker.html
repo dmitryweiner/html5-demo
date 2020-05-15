@@ -1,64 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Web Worker</title>
-    <script src="files/pi.js"></script>
-    <script type="application/javascript">
-        document.addEventListener("DOMContentLoaded", () => {
-            const buttonCalc = document.getElementById("buttonCalc");
-            const buttonCalcInWorker = document.getElementById("buttonCalcInWorker");
-            const digitsCount = document.getElementById("digitsCount");
-            const result = document.getElementById("result");
-            const status = document.getElementById("status");
+  <meta charset="UTF-8">
+  <title>Web Worker</title>
+  <script src="files/pi.js"></script>
+  <script type="application/javascript">
+    document.addEventListener("DOMContentLoaded", () => {
+      const buttonCalc = document.getElementById("buttonCalc");
+      const buttonCalcInWorker = document.getElementById("buttonCalcInWorker");
+      const buttonStopWorker = document.querySelector('#stopCalcWorker');
+      const digitsCount = document.getElementById("digitsCount");
+      const result = document.getElementById("result");
+      const status = document.getElementById("status");
+      let myWorker;
 
-            buttonCalc.addEventListener("click", () => {
-                const initialTime = new Date();
-                status.innerText = "Running.";
-                result.innerHTML = "";
-                setTimeout(() => {
-                    result.innerHTML = calcPi(digitsCount.value);
-                    status.innerText = `Calculation ended. It took ${new Date() - initialTime} ms.`;
-                }, 0);
-            });
+      buttonCalc.addEventListener("click", () => {
+        const initialTime = new Date();
+        status.innerText = "Running.";
+        result.innerHTML = "";
+        setTimeout(() => {
+          result.innerHTML = calcPi(digitsCount.value);
+          status.innerText = `Calculation ended. It took ${new Date() - initialTime} ms.`;
+        }, 0);
+      });
 
-            buttonCalcInWorker.addEventListener("click", () => {
-                const initialTime = new Date();
-                status.innerText = "Running.";
-                result.innerHTML = "";
-                setTimeout(() => {
-                    const myWorker = new Worker("files/pi.js");
-                    myWorker.postMessage(digitsCount.value);
+      buttonCalcInWorker.addEventListener("click", () => {
+        const initialTime = new Date();
+        status.innerText = "Running.";
+        result.innerHTML = "";
+        setTimeout(() => {
+          myWorker = new Worker("files/pi.js");
+          myWorker.postMessage(digitsCount.value);
+          myWorker.onmessage = function(e) {
+            result.innerHTML = e.data;
+            status.innerText = `Calculation ended. It took ${new Date() - initialTime} ms.`;
+          };
+        }, 0);
+      });
 
-                    myWorker.onmessage = function(e) {
-                        result.innerHTML = e.data;
-                        status.innerText = `Calculation ended. It took ${new Date() - initialTime} ms.`;
-                    };
-                }, 0);
-            });
-        });
-    </script>
-    <link rel="stylesheet" type="text/css" href="files/default.css"/>
-    <style type="text/css">
-        #result {
-            width: 800px;
-            overflow-wrap: break-word;
-        }
-    </style>
+      buttonStopWorker.addEventListener('click', () => {
+        status.innerText = "Stopped.";
+        myWorker.terminate();
+        myWorker = undefined;
+      });
+
+    });
+  </script>
+  <link rel="stylesheet" type="text/css" href="files/default.css"/>
+  <style type="text/css">
+    #result {
+      width: 800px;
+      overflow-wrap: break-word;
+    }
+  </style>
 </head>
 <body>
 <div id="wrapper">
-    <h1>Pi (&pi;) number calculations in separate thread</h1>
-    <label>
-        Number of digits
-        <input type="number" id="digitsCount" value="10">
-    </label>
-    <button id="buttonCalc">Calculate in main thread</button>
-    <button id="buttonCalcInWorker">Calculate in web worker</button>
-    <br/>
-    <div>Status: <span id="status">Idle</span></div>
-    <br/>
-    <div id="result">3.14</div>
+  <h1>Pi (&pi;) number calculations in separate thread</h1>
+  <label>
+    Number of digits
+    <input type="number" id="digitsCount" value="10">
+  </label>
+  <button id="buttonCalc">Calculate in main thread</button>
+  <button id="buttonCalcInWorker">Calculate in web worker</button>
+  <button id="stopCalcWorker">Stop web worker</button>
+  <br/>
+  <div>Status: <span id="status">Idle</span></div>
+  <br/>
+  <div id="result">3.14</div>
 </div>
 </body>
 </html>
