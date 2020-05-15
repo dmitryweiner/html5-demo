@@ -8,9 +8,11 @@
         document.addEventListener("DOMContentLoaded", () => {
             const buttonCalc = document.getElementById("buttonCalc");
             const buttonCalcInWorker = document.getElementById("buttonCalcInWorker");
+            const buttonStopWorker = document.querySelector('#stopCalcWorker');
             const digitsCount = document.getElementById("digitsCount");
             const result = document.getElementById("result");
             const status = document.getElementById("status");
+            let myWorker;
 
             buttonCalc.addEventListener("click", () => {
                 const initialTime = new Date();
@@ -36,6 +38,11 @@
                     };
                 }, 0);
             });
+            buttonStopWorker.addEventListener('click', () => {
+                status.innerText = "Stopped.";
+                myWorker.terminate();
+                myWorker = undefined;
+            });
         });
     </script>
     <link rel="stylesheet" type="text/css" href="files/default.css"/>
@@ -55,6 +62,7 @@
     </label>
     <button id="buttonCalc">Calculate in main thread</button>
     <button id="buttonCalcInWorker">Calculate in web worker</button>
+    <button id="stopCalcWorker">Stop web worker</button>
     <br/>
     <div>Status: <span id="status">Idle</span></div>
     <br/>
